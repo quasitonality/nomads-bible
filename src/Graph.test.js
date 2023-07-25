@@ -121,7 +121,7 @@ describe('Graph', ()=>{
       graph.link(2, 4, 0)
       graph.link(4, 1, 0)
       graph.link(1, 3, 0)
-      expect(graph.findMinimumTraversal()).toEqual([3,0,2,4,1,3])
+      expect(graph.findMinimumTraversal(3, true)).toEqual([3,0,2,4,1,3])
     })
   })
 
