@@ -1,20 +1,20 @@
 class Graph {
   constructor () {
-    this._nodes = []
+    this._nodes = {}
   }
 
-  get nodes () { return this._nodes.slice(0) }
+  get nodes () { return Object.create(this._nodes) }
 
-  get values () { return this._nodes.map(node => node.value) }
+  get values () { return this._nodes.keys() }
 
-  get size () { return this._nodes.length }
+  get size () { return this._nodes.keys().length }
 
   includes (value) {
-    return !this._nodes.every(node => node.value !== value)
+    return !!(this._nodes[value])
   }
 
   find (value) {
-    return this._nodes.find(node => node.value === value)
+    return this._nodes[value]
   }
 
   insert (value) {
@@ -23,7 +23,7 @@ class Graph {
       node = this.find(value)
     } else {
       node = new GraphNode(value)
-      this._nodes.push(node)
+      this._nodes[value] = node
     }
     return node
   }
@@ -39,40 +39,37 @@ class Graph {
   }
 
   linkAll (cost, overwrite) {
-    this._nodes.forEach((fromNode)=>{
-      this._nodes.forEach((toNode)=>{
+    for (let key in this._nodes) {
+      let fromNode = this._nodes[key]
+      for (let key in this._nodes) {
+        let toNode = this._nodes[key]
         if (fromNode !== toNode && (overwrite || !fromNode.hasLink(toNode))) {
           fromNode.link(toNode, cost)
         }
-      })
-    })
+      }
+    }
   }
 }
 
 class GraphNode {
   constructor (value) {
     this._value = value
-    this._links = []
+    this._links = {}
   }
 
   link (node, cost) {
     if (node === this) {
       throw new Error('Cannot link a node to itself')
     }
-    let link = this._links.find(link => link.node === node)
-    if (link) {
-      link.cost = cost
-    } else {
-      this._links.push({node, cost})
-    }
+    this._links[node.value] = { node, cost }
   }
 
   hasLink(node) {
-    return this._links.find(link => link.node === node) ? true : false
+    return this._links[node.value] ? true : false
   }
 
   get links () {
-    return this._links.map(link => Object.create(link))
+    return this._links.keys().map(key => this._links[key])
   }
 
   get value () { return this._value }
