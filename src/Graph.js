@@ -3,14 +3,14 @@ class Graph {
     this._nodes = {}
   }
 
-  get nodes () { return Object.create(this._nodes) }
+  get nodes () { return this.values.map(val => this._nodes[val]) }
 
-  get values () { return this._nodes.keys() }
+  get values () { return Object.keys(this._nodes).map(key => this._nodes[key].value) }
 
-  get size () { return this._nodes.keys().length }
+  get size () { return this.values.length }
 
   includes (value) {
-    return !!(this._nodes[value])
+    return !(this._nodes[value] === undefined)
   }
 
   find (value) {
@@ -49,6 +49,57 @@ class Graph {
       }
     }
   }
+
+  pathCost (...stops) {
+    return stops.reduce((acc, value, index)=>{
+      if (index === stops.length - 1) return acc
+      return acc + this.find(value).getLinkCost(stops[index + 1])
+    }, 0)
+  }
+
+  pathCostBreakdown (...stops) {
+    const costs = []
+    for (let i = 0; i < stops.length - 1; i++) {
+      const a = stops[i]
+      const b = stops[i + 1]
+      costs.push(this.find(a).getLinkCost(b))
+    }
+    return costs
+  }
+
+  findMinimumTraversal(startValue, doReturn, maxStops) {
+    const permutations = []
+    const values = this.values
+    const stops = values.slice()
+    stops.splice(stops.indexOf(startValue), 1)
+    if (maxStops === undefined) maxStops = stops.length
+
+    const permutate = (arrayLeft, arrayRight, depth) => {
+      if (arrayRight.length === 0 || depth === maxStops) {
+        permutations.push(arrayLeft)
+        return
+      }
+      arrayRight.forEach((value, index)=>{
+        const copyRight = arrayRight.slice()
+        copyRight.splice(index, 1)
+        permutate(arrayLeft.concat([value]), copyRight, depth + 1)
+      })
+    }
+    permutate([], stops, 0)
+    let minCost
+    let minCostPath = []
+    permutations.forEach((perm)=>{
+      let path = [startValue].concat(perm)
+      if (doReturn) path.push(startValue)
+      let pathCost = this.pathCost(...path)
+      if (minCost === undefined || pathCost < minCost) {
+        minCost = pathCost
+        minCostPath = path
+      }
+    })
+
+    return minCostPath
+  }
 }
 
 class GraphNode {
@@ -68,8 +119,12 @@ class GraphNode {
     return this._links[node.value] ? true : false
   }
 
+  getLinkCost(value) {
+    return this._links[value].cost
+  }
+
   get links () {
-    return this._links.keys().map(key => this._links[key])
+    return Object.keys(this._links).map(key => this._links[key])
   }
 
   get value () { return this._value }

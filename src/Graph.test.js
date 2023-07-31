@@ -92,11 +92,11 @@ describe('Graph', ()=>{
       for (let x = 0; x < 5; x++) {
         graph.insert(x)
       }
-      graph.linkAll(0)
+      graph.linkAll(50)
     })
 
     it ('Should return an array', ()=>{
-      expect(graph.findMinimumTraversal(1).isArray()).toBe(true)
+      expect(Array.isArray(graph.findMinimumTraversal(1))).toBe(true)
     })
 
     it ('Should begin with the given value', ()=>{
@@ -106,11 +106,11 @@ describe('Graph', ()=>{
     it ('Should visit every node exactly once', ()=>{
       let test = graph.findMinimumTraversal(0)
       expect(test.length).toEqual(graph.size)
-      expect(Graph.values.every(value => test.includes(value))).toBe(true)
+      expect(graph.values.every(value => test.includes(value))).toBe(true)
     })
 
     it ('Should return to start if second parameter is set to true', ()=>{
-      let test = graph.findMinimumTraversal(3)
+      let test = graph.findMinimumTraversal(3, true)
       expect(test[0]).toBe(3)
       expect(test[test.length - 1]).toBe(3)
     })
