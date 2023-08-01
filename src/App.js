@@ -17,16 +17,19 @@ function App() {
   }
 
   return (
-    <div className="App">
-      <h1>Nomad's Bible</h1>
-      <div className='flex items-center'>
-        <div className='width-3/12'>
-          <JourneyForm calculate={calculateGraphData} />
+    <div className="App w-full">
+      <article className='prose max-w-none prose-headings:m-0 flex flex-col items-center'>
+        <h1 className='bg-base-200 w-full pb-3 pt-2'>Nomad's Bible</h1>
+        <div className='flex w-full items-start'>
+          <div className='card bg-base-200 m-4 p-4'>
+            <JourneyForm calculate={calculateGraphData} />
+          </div>
+          <div className="divider h-full"></div>
+          <div className='flex grow m-4 p-4'>
+            <GraphView graphData={graphData} isCalculating={isCalculating} />
+          </div>
         </div>
-        <div>
-          <GraphView graphData={graphData} isCalculating={isCalculating} />
-        </div>
-      </div>
+      </article>
     </div>
   );
 }

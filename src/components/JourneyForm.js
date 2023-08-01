@@ -91,7 +91,7 @@ function JourneyForm ({calculate}) {
   for (let x = 0; x < destinationCount; x++) {
     destinationSelectors.push((
       <div key={'select-' + x}>
-        <select name='destination' defaultValue={defaultPlaces[x + 1]} onChange={destinationHandler(x)} >
+        <select name='destination' className='select select-bordered' defaultValue={defaultPlaces[x + 1]} onChange={destinationHandler(x)} >
           {locations.map((country, index)=>{
             const op =
               <option value={index} key={'select-' + x + '-' + index} >{country.name}</option>
@@ -110,16 +110,15 @@ function JourneyForm ({calculate}) {
     e.preventDefault()
   }
 
-  return loading ? <h2>Loading...</h2> :
+  return loading ? <h2>Loading Locations...</h2> :
   (
     <div>
-      <h2 hidden={!loading}>Loading...</h2>
       <div hidden={loading}>
         <h2>Your Journey</h2>
         <form action='dialog' onSubmit={handleSubmit} hidden={loading}>
           <div className='flex flex-col'>
-            <label>Start</label>
-            <select name='start' onChange={handleChangeStart} defaultValue={defaultPlaces[0]}>
+            <label >Start</label>
+            <select name='start' className='select select-bordered' onChange={handleChangeStart} defaultValue={defaultPlaces[0]}>
               {locations.map((country, index)=>{
                 const op = <option value={index} key={'select-start-' + index} >{country.name}</option>
                 return op
@@ -128,10 +127,12 @@ function JourneyForm ({calculate}) {
             <label>Destinations</label>
             {destinationSelectors}
             <button className='btn' onClick={()=>{setDestinationCount(destinationCount + 1)}}>Add a Stop</button>
-            <label>Return?</label>
-            <input type='checkbox' onChange={handleReturn} />
+            <div className='flex place-items-center'>
+              <label>Return?</label>
+              <input type='checkbox' className='checkbox ml-2' onChange={handleReturn} />
+            </div>
+            <button className='btn grow' onClick={handleGo}>Go</button>
           </div>
-          <button className='btn' onClick={handleGo}>Go</button>
           </form>
       </div>
     </div>

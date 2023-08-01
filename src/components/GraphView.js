@@ -11,20 +11,26 @@ function GraphView ({isCalculating, graphData}) {
       cards = costs.map((cost, i) => {
         let a = path[i]
         let b = path[i + 1]
-        return <div>{`${a} --> ${b}, $${cost}`}</div>
+        return (
+          <div className='card bg-base-200 p-4 m-4'>
+            <h3 className='italic'>{`${a} --> ${b}, $${cost}`}</h3>
+          </div>
+
+        )
       })
     }
   } catch (err) {
     console.log(err.message)
   }
 
-  if (isCalculating) return <h2>Calculating...</h2>
+  if (isCalculating) return <h2 className='w-full' >Calculating...</h2>
   return graphData ? (
-    <div>
+    <div className='grow'>
+      <h2 className='grow w-full' >Lowest Cost Path:</h2>
       {cards}
-      <div>${graphData.graph.pathCost(...path)}</div>
+      <h2>${graphData.graph.pathCost(...path)}</h2>
     </div>
-  ) : <h2>Let's Go!</h2>
+  ) : <h2 className='grow w-full italic'>Let's Go!</h2>
 }
 
 export default GraphView
